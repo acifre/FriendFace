@@ -5,6 +5,7 @@
 //  Created by Anthony Cifre on 5/25/23.
 //
 
+import CoreData
 import SwiftUI
 
 struct ContentView: View {
@@ -21,39 +22,14 @@ struct ContentView: View {
                         DetailView(user: user)
 
                     } label: {
-                        HStack {
-                            ZStack {
-                                Circle()
-                                    .foregroundColor(.black)
-                                    .frame(width: 40, height: 40)
-                                    .overlay {
-                                        Circle()
-                                            .strokeBorder(lineWidth: 2)
-                                            .foregroundColor(user.isActive ? .green : .gray)
-                                    }
-                                Text("\(user.wrappedName.initials(name: user.wrappedName))")
-//                                    .font(.headline)
-                                    .foregroundColor(.primary)
-                                    .padding(1)
-                            }
-                            .padding(.trailing, 5)
-                            VStack(alignment: .leading) {
-                                Text(user.wrappedName)
-                                    .font(.title3)
-                                    .foregroundColor(.primary)
-                                    .padding([.top, .bottom], 1)
-                                Text(user.isActive ? "Online" : "Offline")
-                                    .font(.caption)
-                                    .foregroundColor(user.isActive ? .green: .secondary)
-                            }
-                        }
+                        ContactView(user: user, circleSize: 40)
                     }
                     
                 }
             .padding(2)
             .task {
                 
-                if cachedUsers.isEmpty || cachedUsers.count < 101 {
+                if cachedUsers.isEmpty {
                     
                     if let retrievedUsers = await getUsers() {
                         users = retrievedUsers
@@ -118,14 +94,28 @@ struct ContentView: View {
         return nil
     }
     
-}
-
-struct ContentView_Previews: PreviewProvider {
-    
-    @StateObject private var dataController = DataController()
-    
-    static var previews: some View {
-        ContentView()
-
+    func createNewUser(context: NSManagedObjectContext, user: User) {
+        let newUser = CachedUser(context: context)
+        newUser.id = user.id
+        newUser.name = user.name
+        newUser.about = user.about
+        newUser.address = user.address
+        newUser.isActive = user.isActive
+        newUser.age = Int16(user.age)
+        newUser.email = user.email
+        newUser.company = user.company
+        newUser.registered = user.registered
+        newUser.tags = user.tags.joined(separator: ",")
     }
+    
 }
+
+//struct ContentView_Previews: PreviewProvider {
+//
+//    @StateObject private var dataController = DataController()
+//
+//    static var previews: some View {
+//        ContentView()
+//
+//    }
+//}

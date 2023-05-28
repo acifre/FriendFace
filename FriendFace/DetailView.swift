@@ -22,30 +22,7 @@ struct DetailView: View {
         
         VStack {
             Form {
-                HStack {
-                    ZStack {
-                        Circle()
-                            .frame(width: 50, height: 50)
-                            .overlay {
-                                Circle()
-                                    .strokeBorder(lineWidth: 2)
-                                    .foregroundColor(.blue)
-                            }
-                        Text("\(user.wrappedName.initials(name: user.wrappedName))")
-                            .font(.title2)
-                            .foregroundColor(.black)
-                    }
-                    .padding(.trailing, 5)
-                    
-                    VStack(alignment: .leading) {
-                        Text(user.wrappedName)
-                            .font(.largeTitle)
-                        Text(user.isActive ? "Online" : "Offline")
-                            .font(.caption)
-                            .foregroundColor(user.isActive ? .green: .secondary)
-
-                    }
-                }
+                ContactView(user: user, circleSize: 50)
                 Section("Contact Info") {
                     
                     HStack(alignment: .top) {
@@ -79,7 +56,7 @@ struct DetailView: View {
                 }
                 Section("Friends") {
                     VStack(alignment: .leading, spacing: 10) {
-                        ForEach(user.friendArray, id: \.id) { friend in
+                        ForEach(user.friendArray) { friend in
                             Text(friend.wrappedName)
                         }
                     }

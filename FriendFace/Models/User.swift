@@ -7,9 +7,9 @@
 import Foundation
 
 
-struct User: Codable {
+struct User: Codable, Identifiable {
     
-    struct Friend: Codable {
+    struct Friend: Codable, Identifiable {
         var id: UUID
         var name: String
     }
